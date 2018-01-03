@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace= "mybatis.mapper.RestMapper" >      
+    
+    <select id="getUser" parameterType="map" resultType="map">
+    	SELECT 
+		    *
+		FROM
+		    TB_S_ACCOUNT		    
+    </select>  
+    
+	<select id="getUsers" parameterType="map" resultType="map">
+  		SELECT 
+		    *
+		FROM
+		    TB_S_ACCOUNT
+		<where> 	
+	  	    1 = 1
+			<if test="id != null and id != ''">
+			 	AND id = #{id}					
+			</if>
+			LIMIT 1
+	  	</where>          	  		       		   		  	      
+    </select>             
+                       
+    <insert id="createUser" parameterType="map"  useGeneratedKeys="true">
+		INSERT
+          INTO TB_S_ACCOUNT
+               (
+                groupId
+                , name
+                , gender
+                , age
+                , createDate
+                , updateDate                
+               )
+        VALUES (
+                #{groupId}   
+                ,#{name} 						  				                                                                            
+                ,#{gender}
+                ,#{age}
+                , NOW()                
+                , NOW()
+               )
+                          
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+        	SELECT LAST_INSERT_ID() as id
+    	</selectKey> 
+	</insert>
+	
+	<delete id="deleteUser" parameterType="map">
+		DELETE
+          FROM TB_S_ACCOUNT
+          WHERE id
+  		   <foreach collection="constraints" item="constraint" open=" " separator=",">
+			   ${id}
+		  </foreach>          
+	</delete>
+	
+    <update id="updateBulkData" parameterType="map"  useGeneratedKeys="true">
+    	BEGIN
+    		<foreach collection="list" item="item"  index="index"  separator=";" >
+        		UPDATE  TB_S_USER 
+       			SET 
+        			<if test="offer.name != null and offer.name != ''">
+			 			name = #{offer.name},					
+					</if>
+        			<if test="offer.gender != null and offer.gender != ''">
+			 			AND gender = #{offer.gender},				
+					</if>									
+				<where> 	
+	  	    		1 = 1
+					<if test="item.id != null and item.id != ''">
+			 			AND id = #{item.id}					
+					</if>
+	  			</where> 									             		
+			</foreach>
+    	END
+	</update>		
+	 
+		                  	
+</mapper>

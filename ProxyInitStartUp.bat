@@ -1,0 +1,1 @@
+java -Xms512m -Xmx1024m -jar -Dfile.encoding=UTF-8 emmProxyDaemon-0.1.0.jar module.act=init quartz.path=./config/quartz_mssql.properties app.config.location=file:./config
